@@ -1,0 +1,5 @@
+sample_id,binary_label,source,recording_id,original_label,p_drone_associated,predicted_label,decision_threshold
+dronerf_0000,0,dronerf,00000L_0,background,8.797865769225375e-08,0,0.5297634093511037
+dronerf_0001,1,dronerf,10000L_0,bepop_drone,5.350999201783857e-07,0,0.5297634093511037
+dronerf_0002,1,dronerf,10100L_0,ar_drone,3.4902442450903466e-07,0,0.5297634093511037
+dronerf_0003,1,dronerf,11000L_9,phantom_drone,7.580780724166808e-08,0,0.5297634093511037

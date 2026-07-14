@@ -1,0 +1,13 @@
+.DS_Store
+.ipynb_checkpoints/
+.venv/
+__pycache__/
+*.pyc
+data/external/*
+data/interim/*
+data/processed/*
+models/*
+!data/external/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!models/.gitkeep

@@ -1,28 +1,121 @@
-## Research Question
+# RF-Based Drone Signal Detection Capstone
 
-Can radio frequency (RF) signal data alone — without cameras, radar, or GPS — be used to reliably detect the presence of a drone and classify which type it is?
+This project implements a reproducible binary classifier for RF-based drone detection. The target is:
 
-## Expected Data Source(s)
+- `1`: drone-associated RF activity
+- `0`: RF background/noise
 
-DroneRF dataset (Allahham et al., 2019, Qatar University) — RF recordings from 3 drone models across operating modes (off, on/connected, hovering, flying, video recording), plus drone-free background RF noise. ~40+ GB, available via Mendeley Data: https://data.mendeley.com/datasets/f4c2b4n755/1 Links to an external site.
+The implementation follows the capstone plan: public RF datasets, a manifest-driven workflow, log-spectrogram features, classical baselines, a compact CNN path, validation-threshold selection, and final reporting focused on recall with a maximum validation false-positive rate of 5%.
 
-CardRF dataset (Medaiyese et al., 2022) — Outdoor RF recordings from UAV controllers, UAVs, Bluetooth, and Wi-Fi devices, captured at both line-of-sight and beyond-line-of-sight ranges (~65 GB). Available via IEEE DataPort: https://ieee-dataport.org/documents/cardinal-rf-cardrf-outdoor-uavuasdrone-rf-signals-bluetooth-and-wifi-signals-dataset Links to an external site.
+## Repository layout
 
-Together these give labeled drone-present/drone-absent examples across multiple drone models, operating modes, and noise conditions — including the Bluetooth/Wi-Fi interference that any real-world detector would have to contend with in the shared 2.4 GHz band.
+```text
+.
+├── data/
+│   ├── external/        # raw downloaded datasets, not committed
+│   ├── interim/         # manifests and derived metadata
+│   └── processed/       # model-ready arrays, not committed
+├── notebooks/
+│   └── rf_drone_detection_capstone.ipynb
+├── docs/
+│   └── data_acquisition.md
+├── reports/
+│   └── final_report_outline.md
+├── rf_drone_detection/
+│   ├── config.py
+│   ├── evaluation.py
+│   ├── features.py
+│   ├── manifest.py
+│   ├── models.py
+│   └── workflow.py
+├── scripts/
+│   ├── build_manifest_from_labeled_dirs.py
+│   ├── create_report_charts.py
+│   ├── create_recording_disjoint_splits.py
+│   ├── create_synthetic_smoke_data.py
+│   ├── mark_manifest_external.py
+│   ├── prepare_noisy_drone_pt.py
+│   ├── prepare_dronerf_subset.py
+│   ├── run_experiment.py
+│   └── run_smoke_pipeline.py
+└── tests/
+    └── test_workflow.py
+```
 
-## Techniques
+## Data sources
 
-CNN on spectrograms — convert raw IQ signals to spectrograms via Short-Time Fourier Transform (STFT), then use a CNN to learn the frequency-domain "fingerprint" of each drone type.
-LSTM / RNN — capture temporal patterns across operating modes (e.g., the signal looks different when a drone is hovering vs. actively flying).
-Multi-class classification with SNR robustness testing — evaluate performance across varying signal-to-noise ratios to test how the model holds up under real-world interference, not just clean lab conditions.
-Expected Results
+Primary dataset:
 
-A trained model that can, from RF signal data alone, (1) flag whether a drone is present in a given environment, and (2) classify which of the known drone types it is, with performance reported separately under clean and noisy/interference conditions to show how reliability degrades as real-world conditions get messier.
+- [Noisy Drone RF Signal Classification](https://www.kaggle.com/datasets/sgluege/noisy-drone-rf-signal-classification), used for training and primary evaluation. Map all drone/control-signal classes to `drone_associated=1` and the noise/background class to `0`.
 
-## Why This Question Is Important
+Secondary dataset:
 
-I have worked in DoD for most of my career and off and on throughout my career, I've worked on project that focuses on drones.  Most existing counter-drone systems rely on cameras, radar, or GPS tracking and each of these has major blindspots (i.e. cameras don't do well at night or with weather challenges, radar struggles with small or slow-moving drones, and GPS-based tracking only works if the drone is broadcasting its own location and being honest about their location - typically they can be spoofed or not broadcast at all).  RF detection closes the gap on these blindspots because every drone has to communicate with its controller whether it wants to be tracked or be invisible.   
+- [DroneRF](https://pmc.ncbi.nlm.nih.gov/articles/PMC6727013/), used for data-composition analysis and external robustness checks. Because its collection setup differs from the primary data, report it as a domain-shift evaluation rather than mixing it blindly with the primary dataset.
 
-If this question goes unanswered, organization responsible for protecting airspace like airports, prisons, stadiums, and other critical infrastructure are left dependent on detection methods that can be evaded by GPS spoofing or GPS denied drones.Now that consumer drones have been cheap and available to common users, this is a real security gap that needs to be addressed.
+Place raw data under `data/external/`. The code expects a manifest with the columns described below.
 
-The practical payoff to this project is a proof-of-concept showing that a relatively low-cost RF sensor paired with a trained model can give a security team an early, reliable warning that something is flying nearby and determine the possible device without needing someone to see it visually and without necessarily the drone's cooperation.  These events could trigger an alert, log an incident, and escalate to a human responder.
+See [data_acquisition.md](/Users/privateaya_1/Documents/berkeley_capstone/docs/data_acquisition.md) for dataset download and manifest setup details.
+
+For class-labeled folders, start with:
+
+```bash
+python scripts/build_manifest_from_labeled_dirs.py data/external/noisy_drone_rf --output data/interim/manifest.csv
+python scripts/create_recording_disjoint_splits.py data/interim/manifest.csv
+```
+
+For the Kaggle `dataset.pt` layout, after downloading the full file:
+
+```bash
+python scripts/prepare_noisy_drone_pt.py --inspect-only
+python scripts/prepare_noisy_drone_pt.py --max-samples-per-class 1000
+python scripts/run_experiment.py --manifest data/interim/manifest.csv --output-dir reports/artifacts/noisy_drone_rf
+python scripts/summarize_results.py --artifact-dir reports/artifacts/noisy_drone_rf
+python scripts/create_report_charts.py --artifact-dir reports/artifacts/noisy_drone_rf
+```
+
+## Manifest contract
+
+The project is manifest-first. Each row should represent one model input sample:
+
+```text
+sample_id, source, recording_id, path, original_label, binary_label, split
+```
+
+Optional columns such as `snr`, `operating_mode`, `device`, and `notes` are preserved and used for grouped reporting when present.
+
+Splits must be recording-disjoint: all windows or augmentations from the same `recording_id` stay in exactly one split.
+
+## Quick start
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python scripts/create_synthetic_smoke_data.py
+python scripts/run_smoke_pipeline.py
+python -m unittest discover -s tests
+```
+
+The synthetic data is only a smoke-test fixture. It proves the workflow runs before the public RF datasets are downloaded.
+
+For a bounded local DroneRF prototype:
+
+```bash
+python scripts/prepare_dronerf_subset.py --split-mode primary --members-per-archive 4 --max-values 8192 --output-dir data/processed/dronerf_primary --manifest data/interim/dronerf_primary_manifest.csv
+python scripts/run_experiment.py --manifest data/interim/dronerf_primary_manifest.csv --output-dir reports/artifacts/dronerf_primary
+```
+
+## Modeling approach
+
+The baseline path extracts spectral summary features and trains:
+
+- logistic regression
+- random forest
+
+The CNN path trains a compact image classifier on normalized log-spectrograms through `rf_drone_detection.cnn.train_compact_cnn`. If PyTorch is not installed, the project still runs the classical baselines and reports the CNN dependency gap honestly.
+
+The selected decision threshold is chosen on validation data to maximize recall subject to false-positive rate `<= 0.05`. PR-AUC is used as the tie-breaker when models satisfy the FPR constraint.
+
+## Ethical use
+
+This is a research prototype for defensive RF awareness and academic study. It should not be represented as a deployed security system, a real-time enforcement tool, or a reliable detector outside the measured RF conditions. Results should explicitly state limitations around hardware, environment, RF silence, encryption, geography, and dataset shift.

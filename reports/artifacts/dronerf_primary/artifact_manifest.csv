@@ -1,0 +1,4 @@
+artifact,path
+model_comparison,reports/artifacts/dronerf_primary/model_comparison.csv
+test_metrics,reports/artifacts/dronerf_primary/test_metrics.json
+test_predictions,reports/artifacts/dronerf_primary/test_predictions.csv

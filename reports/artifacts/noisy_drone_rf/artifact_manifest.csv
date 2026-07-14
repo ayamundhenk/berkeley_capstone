@@ -1,0 +1,6 @@
+artifact,path
+model_comparison,reports/artifacts/noisy_drone_rf/model_comparison.csv
+test_metrics,reports/artifacts/noisy_drone_rf/test_metrics.json
+test_predictions,reports/artifacts/noisy_drone_rf/test_predictions.csv
+external_metrics,reports/artifacts/noisy_drone_rf/external_metrics.json
+external_predictions,reports/artifacts/noisy_drone_rf/external_predictions.csv

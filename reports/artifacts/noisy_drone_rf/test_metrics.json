@@ -1,0 +1,13 @@
+{
+  "f1": 0.7814235234729934,
+  "false_negative": 426.0,
+  "false_positive": 7.0,
+  "fpr": 0.035,
+  "pr_auc": 0.9843906885542705,
+  "precision": 0.9910371318822023,
+  "recall": 0.645,
+  "roc_auc": 0.9097291666666667,
+  "threshold": 0.5297634093511037,
+  "true_negative": 193.0,
+  "true_positive": 774.0
+}
