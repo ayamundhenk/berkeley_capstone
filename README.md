@@ -5,7 +5,9 @@ Can radio frequency (RF) signal data alone — without cameras, radar, or GPS �
 ## Expected Data Source(s)
 
 DroneRF dataset (Allahham et al., 2019, Qatar University) — RF recordings from 3 drone models across operating modes (off, on/connected, hovering, flying, video recording), plus drone-free background RF noise. ~40+ GB, available via Mendeley Data: https://data.mendeley.com/datasets/f4c2b4n755/1 Links to an external site.
+
 CardRF dataset (Medaiyese et al., 2022) — Outdoor RF recordings from UAV controllers, UAVs, Bluetooth, and Wi-Fi devices, captured at both line-of-sight and beyond-line-of-sight ranges (~65 GB). Available via IEEE DataPort: https://ieee-dataport.org/documents/cardinal-rf-cardrf-outdoor-uavuasdrone-rf-signals-bluetooth-and-wifi-signals-dataset Links to an external site.
+
 Together these give labeled drone-present/drone-absent examples across multiple drone models, operating modes, and noise conditions — including the Bluetooth/Wi-Fi interference that any real-world detector would have to contend with in the shared 2.4 GHz band.
 
 ## Techniques
