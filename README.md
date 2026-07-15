@@ -1,5 +1,16 @@
 # RF-Based Drone Signal Detection Capstone
 
+## Project summary
+
+This capstone asks whether a machine-learning model can tell the difference between drone-associated radio-frequency signals and background noise. The main submission notebook is written as a step-by-step analysis and uses two standard classification models: logistic regression and random forest.
+
+The project originally proposed CardRF, but that dataset was not reliably accessible. The primary source was changed to the public Noisy Drone RF Signal Classification dataset while keeping the same research question.
+
+Start here:
+
+- `notebooks/rf_drone_detection_capstone.executed.ipynb`: completed Module 20 notebook with outputs
+- `reports/final_report_draft.md`: draft content for the final non-technical report
+
 This project implements a reproducible binary classifier for RF-based drone detection. The target is:
 
 - `1`: drone-associated RF activity
