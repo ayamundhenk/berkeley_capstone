@@ -8,8 +8,24 @@ The project originally proposed CardRF, but that dataset was not reliably access
 
 Start here:
 
-- `notebooks/rf_drone_detection_capstone.executed.ipynb`: completed Module 20 notebook with outputs
+- [Completed Module 20 notebook](notebooks/rf_drone_detection_capstone.executed.ipynb): EDA, data preparation, baseline modeling, and results
 - `reports/final_report_draft.md`: draft content for the final non-technical report
+
+## Results
+
+The baseline analysis compared logistic regression and random forest models. Logistic regression was selected because it had slightly higher validation recall while meeting the project requirement of a validation false-positive rate no greater than 5%.
+
+On the held-out test set, the selected logistic regression model achieved:
+
+- Recall: 64.5%
+- Precision: 99.1%
+- F1 score: 78.1%
+- False-positive rate: 3.5%
+- PR-AUC: 98.4%
+
+The main EDA finding was that model performance depended strongly on signal-to-noise ratio (SNR). Recall was low for weak signals at negative SNR values and improved sharply as signal quality increased. These results show that the model is a useful baseline, but its low-SNR performance must improve before it could be considered for practical use.
+
+See the [completed Jupyter notebook](notebooks/rf_drone_detection_capstone.executed.ipynb) for the full analysis, visualizations, and interpretation.
 
 This project implements a reproducible binary classifier for RF-based drone detection. The target is:
 
