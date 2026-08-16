@@ -7,6 +7,9 @@ data/external/*
 data/interim/*
 data/processed/*
 models/*
+Portuguese_banking_comparing_classifiers/
+jira_ms_project_template.xml
+jira_ms_project_template_README.md
 !data/external/.gitkeep
 !data/interim/.gitkeep
 !data/processed/.gitkeep

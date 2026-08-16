@@ -1,0 +1,3 @@
+model,best_cv_recall,test_recall,test_precision,test_f1,test_pr_auc,test_roc_auc
+logistic_regression,1.0,1.0,0.99644128113879,0.9982174688057041,1.0,1.0
+random_forest,1.0,1.0,0.99644128113879,0.9982174688057041,1.0,1.0

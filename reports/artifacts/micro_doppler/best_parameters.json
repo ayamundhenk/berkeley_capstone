@@ -1,0 +1,12 @@
+{
+  "logistic_regression": {
+    "classifier__C": 1.0,
+    "classifier__class_weight": null
+  },
+  "random_forest": {
+    "class_weight": null,
+    "max_depth": null,
+    "min_samples_leaf": 1,
+    "n_estimators": 150
+  }
+}
