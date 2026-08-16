@@ -8,7 +8,7 @@ The primary research question is:
 
 > Can a machine-learning model identify drone-associated RF signals while keeping false alarms low?
 
-The project began with CardRF as the proposed data source. Because that dataset was not reliably accessible, the primary analysis changed to the public [Noisy Drone RF Signal Classification dataset](https://www.kaggle.com/datasets/sgluege/noisy-drone-rf-signal-classification).
+The project began with two datasets including CardRF as one of the proposed data sources. Because the CardRF dataset was not reliably accessible, the primary analysis changed to the public [Noisy Drone RF Signal Classification dataset](https://www.kaggle.com/datasets/sgluege/noisy-drone-rf-signal-classification).
 
 ## Technical notebooks
 
